@@ -3,25 +3,58 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import models.Usuario;
 
-public class Gerenciador_projetoAPP {
-    private static EntityManagerFactory emf;
+import javax.swing.*;
+import java.awt.*;
+
+public class Gerenciador_projetoAPP extends JFrame {
+
+    private static final String EMPTY_SCREEN = "EMPTY_SCREEN" ;
+    private  CardLayout cardLayout;
+    private  JPanel mainPanel;
+
+    public Gerenciador_projetoAPP(){
+        setTitle("Gerenciador de projetos");
+        //setSize(800,600);// tamanho
+        setExtendedState(JFrame.MAXIMIZED_BOTH);//abre tamanho inteiro
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// X vermelho
+        setLocationRelativeTo(null);
+
+        JPanel emptyPanel = new JPanel(new BorderLayout());
+        emptyPanel.add(new Label("Bem-Vindo! Use o menu para navegar", SwingConstants.CENTER),
+                BorderLayout.CENTER);
+
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+
+        mainPanel.add (emptyPanel, EMPTY_SCREEN);
+
+        JMenu menu = new JMenu("Menu");
+        JMenuItem listUsersitem = new JMenuItem("Listar usuariios");
+        JMenuItem exttitem = new JMenu("Sair");
+
+        menu.add(listUsersitem);
+        menu.add(exttitem);
+
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(menu);
+
+        setJMenuBar(menuBar);
+
+
+
+        exttitem.addActionListener(event -> {
+            dispose();
+        });
+        add(mainPanel);
+    }
+
 
     public static void main(String[] args) {
-        emf = Persistence.createEntityManagerFactory("PU");
-        EntityManager em = emf.createEntityManager();
+        SwingUtilities.invokeLater(() -> {
+            new Gerenciador_projetoAPP().setVisible(true);
 
-        Usuario usuario1 = new Usuario(1, "ronald@gmail.com",
-                "Ronald123", "1234");
-
-        Usuario usuario2 = new Usuario(2, "jef@gmail.com",
-                "Jef123", "5678");
-
-        //Persistir no BD(banco de dados)
-
-        em.getTransaction().begin();
-        em.persist(usuario1);
-        em.persist(usuario2);
-        em.getTransaction().commit();
+        });
 
     }
 }
